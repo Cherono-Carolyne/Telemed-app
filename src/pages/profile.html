@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - Medical App</title>
+    <script src="/assets/components.js"></script>
+    <link rel="stylesheet" href="assets/global.css" />
+    <link rel="stylesheet" href="assets/landing.css" />
+    <style>
+      .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .profile-form {
+        background: white;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .gender-group {
+        display: flex;
+        gap: 20px;
+      }
+
+      .gender-group label {
+        font-weight: normal;
+      }
+
+      .save-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+      }
+
+      .save-btn:hover {
+        background-color: #218838;
+      }
+
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      .success-message {
+        color: #28a745;
+        font-size: 14px;
+        margin-top: 5px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <dashboard-layout page-title="My Profile">
+      <h4 slot="page-title">Profile Settings</h4>
+
+      <div slot="dashboard-content" class="profile-container">
+        <form id="profileForm" class="profile-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="first_name">First Name</label>
+              <input type="text" id="first_name" name="first_name" required />
+            </div>
+            <div class="form-group">
+              <label for="last_name">Last Name</label>
+              <input type="text" id="last_name" name="last_name" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" />
+          </div>
+
+          <div class="form-group">
+            <label>Gender</label>
+            <div class="gender-group">
+              <div>
+                <input type="radio" id="male" name="gender" value="male" />
+                <label for="male">Male</label>
+              </div>
+              <div>
+                <input type="radio" id="female" name="gender" value="female" />
+                <label for="female">Female</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="date_of_birth">Date of Birth</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" />
+          </div>
+
+          <button type="submit" class="save-btn">Save Changes</button>
+          <p id="successMessage" class="success-message"></p>
+          <p id="errorMessage" class="error-message"></p>
+        </form>
+      </div>
+    </dashboard-layout>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          window.location.href = "/login";
+          return;
+        }
+
+        // Fetch profile data
+        try {
+          const response = await fetch("/auth/profile", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const profile = await response.json();
+
+          // Populate form with profile data
+          document.getElementById("first_name").value =
+            profile.first_name || "";
+          document.getElementById("last_name").value = profile.last_name || "";
+          document.getElementById("email").value = profile.email || "";
+          document.getElementById("phone").value = profile.phone || "";
+          document.getElementById("address").value = profile.address || "";
+
+          // Format the date from ISO to yyyy-MM-dd
+          if (profile.date_of_birth) {
+            const date = new Date(profile.date_of_birth);
+            const formattedDate = date.toISOString().split("T")[0];
+            document.getElementById("date_of_birth").value = formattedDate;
+          }
+
+          if (profile.gender) {
+            document.querySelector(
+              `input[value="${profile.gender.toLowerCase()}"]`
+            ).checked = true;
+          }
+        } catch (error) {
+          console.error("Error fetching profile:", error);
+          document.getElementById("errorMessage").textContent =
+            "Error loading profile data";
+        }
+
+        // Handle form submission
+        document
+          .getElementById("profileForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const successMessage = document.getElementById("successMessage");
+            const errorMessage = document.getElementById("errorMessage");
+
+            try {
+              const formData = {
+                first_name: document.getElementById("first_name").value,
+                last_name: document.getElementById("last_name").value,
+                phone: document.getElementById("phone").value,
+                address: document.getElementById("address").value,
+                gender: document.querySelector('input[name="gender"]:checked')
+                  ?.value,
+                date_of_birth: document.getElementById("date_of_birth").value,
+              };
+
+              const response = await fetch("/auth/profile", {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(formData),
+              });
+
+              if (response.ok) {
+                successMessage.textContent = "Profile updated successfully";
+                errorMessage.textContent = "";
+              } else {
+                const error = await response.json();
+                errorMessage.textContent =
+                  error.message || "Error updating profile";
+                successMessage.textContent = "";
+              }
+            } catch (error) {
+              console.error("Error updating profile:", error);
+              errorMessage.textContent = "Error updating profile";
+              successMessage.textContent = "";
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

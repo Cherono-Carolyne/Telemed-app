@@ -1,0 +1,41 @@
+
+
+/* Body Styles */
+body {
+  background-color: #f4f4f9; /* Light background for better contrast */
+}
+
+header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+}
+
+/* Navbar Styles */
+nav {
+  background-color: #007bff; /* Navbar background color */
+  padding: 18px 0; /* Padding for the navbar */
+}
+
+nav ul {
+  list-style: none; /* Remove default list styling */
+  display: flex; /* Flexbox for horizontal layout */
+  justify-content: center; /* Center the items */
+}
+
+nav ul li {
+  margin: 0 15px; /* Spacing between items */
+}
+
+nav ul li a {
+  color: white; /* Link color */
+  text-decoration: none; /* Remove underline */
+  font-weight: bold; /* Bold text */
+}
+
+/* Header Info */
+.header-info {
+  text-align: center; /* Center the header info */
+  color: white; /* Text color */
+  margin-top: 5px; /* Spacing above */
+}

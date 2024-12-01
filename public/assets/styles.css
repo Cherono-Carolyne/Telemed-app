@@ -1,0 +1,84 @@
+/* General Styles */
+* {
+    box-sizing: border-box; /* Ensures padding and border are included in element's total width and height */
+    margin: 0; /* Reset default margin */
+    padding: 0; /* Reset default padding */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Set a consistent font */
+}
+
+/* Body Styles */
+body {
+    background-color: #f4f4f9; /* Light background for better contrast */
+}
+
+/* Form Styles */
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Full width for responsiveness */
+    max-width: 400px; /* Limit max width for larger screens */
+    margin: auto; /* Center the form */
+    padding: 20px; /* Add padding for better spacing */
+    background: white; /* White background for the form */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Card Styles */
+.card {
+    margin: 60px auto; /* Center the card with auto margins */
+    padding: 50px 20px; /* Add padding for inner spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 8px; /* Rounded corners */
+}
+
+/* Error Message Styles */
+.errors {
+    color: red; /* Red color for error messages */
+    font-size: 0.9em; /* Slightly smaller font size */
+}
+
+/* Input Styles */
+input {
+    background: rgb(231, 231, 231); /* Light gray background */
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid gray; /* Gray border */
+    height: 35px; /* Increased height for better usability */
+    padding: 5px; /* Add padding for better text spacing */
+    margin-bottom: 15px; /* Space between inputs */
+}
+
+/* Input Focus Styles */
+input:focus {
+    background: #fff; /* White background on focus */
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Button Styles */
+button {
+    background: rgb(76, 231, 252); /* Button background color */
+    border: none; /* Remove default border */
+    padding: 10px; /* Padding for button */
+    border-radius: 5px; /* Rounded corners */
+    font-weight: bolder; /* Bold text */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s ease; /* Smooth transition for background color */
+}
+
+/* Button Hover Styles */
+button:hover {
+    background: rgb(56, 201, 232); /* Darker shade on hover */
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .form {
+        width: 90%; /* Full width on smaller screens */
+    }
+
+    .card {
+        margin: 20px; /* Reduce margin on smaller screens */
+        padding: 30px; /* Reduce padding on smaller screens */
+    }
+}
