@@ -2,8 +2,8 @@
 class AuthGuard {
   static checkAuth() {
     const token = localStorage.getItem("token");
-    const publicPaths = ['/', '/about', '/contact'];
-    const authPaths = ['/login', '/register'];
+    const publicPaths = ["/", "/about", "/contact"];
+    const authPaths = ["/login", "/register"];
     const currentPath = window.location.pathname;
 
     // Allow public paths without authentication
@@ -13,20 +13,24 @@ class AuthGuard {
 
     // Redirect to dashboard if trying to access auth pages while logged in
     if (authPaths.includes(currentPath) && token) {
-      window.location.href = '/dashboard';
+      window.location.href = "/dashboard";
       return;
     }
 
     // Redirect to login if trying to access protected routes while logged out
-    if (!authPaths.includes(currentPath) && !publicPaths.includes(currentPath) && !token) {
-      window.location.href = '/login';
+    if (
+      !authPaths.includes(currentPath) &&
+      !publicPaths.includes(currentPath) &&
+      !token
+    ) {
+      window.location.href = "/login";
       return;
     }
   }
 }
 
 // Initialize auth guard
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   AuthGuard.checkAuth();
 });
 
@@ -46,7 +50,7 @@ class Navbar extends HTMLElement {
           <ul class="nav-links">
             <li><a href="/" class="active">Home</a></li>
             <li><a href="/#about">About Us</a></li>
-            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/#about">Contact Us</a></li>
           </ul>
           <div class="header-cta">
             <div id="authButtons">
@@ -79,7 +83,7 @@ class Navbar extends HTMLElement {
   async checkAuthStatus() {
     const token = localStorage.getItem("token");
     const authButtonsContainer = this.querySelector("#authButtons");
-    
+
     if (token) {
       try {
         // Verify token validity
@@ -90,7 +94,7 @@ class Navbar extends HTMLElement {
         });
 
         if (!response.ok) {
-          throw new Error('Invalid token');
+          throw new Error("Invalid token");
         }
 
         const userData = await response.json();
@@ -106,8 +110,12 @@ class Navbar extends HTMLElement {
         }
         // Redirect to login if on a protected route
         const currentPath = window.location.pathname;
-        if (currentPath !== '/' && currentPath !== '/#about' && currentPath !== '/contact') {
-          window.location.href = '/login';
+        if (
+          currentPath !== "/" &&
+          currentPath !== "/#about" &&
+          currentPath !== "/contact"
+        ) {
+          window.location.href = "/login";
         }
       }
     } else {
@@ -479,15 +487,15 @@ class DashboardLayout extends HTMLElement {
       });
 
       if (!response.ok) {
-        throw new Error('Invalid token');
+        throw new Error("Invalid token");
       }
 
       const userData = await response.json();
-      
+
       // Check role-based access
       const currentPath = window.location.pathname;
       if (!this.checkRoleAccess(currentPath, userData.role)) {
-        window.location.href = '/dashboard';
+        window.location.href = "/dashboard";
         return;
       }
 
@@ -503,12 +511,12 @@ class DashboardLayout extends HTMLElement {
 
   checkRoleAccess(path, role) {
     const roleAccess = {
-      '/admin': ['admin'],
-      '/doctor-dashboard': ['doctor'],
-      '/patient-dashboard': ['patient'],
-      '/appointments': ['doctor', 'patient', 'receptionist'],
-      '/medical-records': ['doctor', 'patient'],
-      // Add more role-specific routes as needed
+      "/admin": ["admin"],
+      "/doctors": ["admin"],
+      "/doctor-dashboard": ["doctor"],
+      "/patient-dashboard": ["patient"],
+      "/appointments": ["doctor", "patient", "receptionist"],
+      "/medical-records": ["doctor", "patient"],
     };
 
     // If path doesn't have specific role requirements, allow access
@@ -587,9 +595,6 @@ class DashboardLayout extends HTMLElement {
       patient: [
         { icon: "📊", label: "Dashboard", link: "/dashboard" },
         { icon: "📅", label: "My Appointments", link: "/appointments" },
-        { icon: "📁", label: "Medical Records", link: "/records" },
-        { icon: "💊", label: "Prescriptions", link: "/prescriptions" },
-        { icon: "💬", label: "Messages", link: "/messages" },
         { icon: "👤", label: "Profile", link: "/profile" },
       ],
       doctor: [
@@ -597,15 +602,12 @@ class DashboardLayout extends HTMLElement {
         { icon: "📅", label: "Schedule", link: "/schedule" },
         { icon: "👥", label: "Patients", link: "/patients" },
         { icon: "📝", label: "Consultations", link: "/consultations" },
-        { icon: "💬", label: "Messages", link: "/messages" },
         { icon: "👤", label: "Profile", link: "/profile" },
       ],
       admin: [
         { icon: "📊", label: "Dashboard", link: "/dashboard" },
         { icon: "👥", label: "Users", link: "/users" },
-        { icon: "🏥", label: "Departments", link: "/departments" },
-        { icon: "📋", label: "Reports", link: "/reports" },
-        { icon: "⚙️", label: "Settings", link: "/settings" },
+        { icon: "🏥", label: "Doctors", link: "/doctors" },
         { icon: "👤", label: "Profile", link: "/profile" },
       ],
       receptionist: [

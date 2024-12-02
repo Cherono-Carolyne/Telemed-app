@@ -86,10 +86,9 @@
     </dashboard-layout>
 
     <script>
-      // Verify authentication
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        window.location.href = '/login';
+        window.location.href = "/login";
       }
 
       document.addEventListener("DOMContentLoaded", async function () {
@@ -239,7 +238,7 @@
               buttons: [
                 {
                   label: "Book Now",
-                  action: 'window.location.href="/appointments/new"',
+                  action: "window.location.href='/appointments/new'",
                   class: "primary-btn",
                 },
               ],
@@ -250,7 +249,7 @@
               buttons: [
                 {
                   label: "View Records",
-                  action: 'window.location.href="/records"',
+                  action: "window.location.href='/records'",
                   class: "success-btn",
                 },
               ],
@@ -263,7 +262,7 @@
               buttons: [
                 {
                   label: "Update Schedule",
-                  action: 'window.location.href="/schedule"',
+                  action: "window.location.href='/schedule'",
                   class: "primary-btn",
                 },
               ],
@@ -274,7 +273,7 @@
               buttons: [
                 {
                   label: "View Patients",
-                  action: 'window.location.href="/patients"',
+                  action: "window.location.href='/patients'",
                   class: "success-btn",
                 },
               ],
@@ -287,7 +286,7 @@
               buttons: [
                 {
                   label: "Manage Users",
-                  action: 'window.location.href="/users"',
+                  action: "window.location.href='/users'",
                   class: "primary-btn",
                 },
               ],
@@ -298,8 +297,30 @@
               buttons: [
                 {
                   label: "Settings",
-                  action: 'window.location.href="/settings"',
+                  action: "window.location.href='/settings'",
                   class: "success-btn",
+                },
+              ],
+            },
+            {
+              title: "Add Doctor",
+              description: "Add a new doctor to the system",
+              buttons: [
+                {
+                  label: "Add Doctor",
+                  action: "window.location.href='/add-doctor'",
+                  class: "primary-btn",
+                },
+              ],
+            },
+            {
+              title: "Doctor Management",
+              description: "View and manage doctors",
+              buttons: [
+                {
+                  label: "View Doctors",
+                  action: "window.location.href='/doctors'",
+                  class: "primary-btn",
                 },
               ],
             },

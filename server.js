@@ -82,8 +82,12 @@ app.get("/profile", (req, res) => {
   res.sendFile(path.join(__dirname, "src/pages", "profile.html"));
 });
 
-app.get("/dash", (req, res) => {
-  res.sendFile(path.join(__dirname, "src/pages", "dash.html"));
+app.get("/add-doctor", (req, res) => {
+  res.sendFile(path.join(__dirname, "src/pages", "add-doctor.html"));
+});
+
+app.get("/doctors", (req, res) => {
+  res.sendFile(path.join(__dirname, "src/pages", "doctors.html"));
 });
 
 app.use("/auth", authRoutes);

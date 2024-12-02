@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doctors List</title>
+    <link rel="stylesheet" href="assets/global.css" />
+    <link rel="stylesheet" href="assets/landing.css" />
+    <script src="assets/components.js"></script>
+    <style>
+      .doctor-list {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .doctors-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      .doctors-table th,
+      .doctors-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .doctors-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .doctors-table tr:hover {
+        background-color: #f5f5f5;
+      }
+
+      .doctors-table td {
+        vertical-align: middle;
+      }
+
+      .status-active {
+        color: #28a745;
+        font-weight: 500;
+      }
+
+      .status-inactive {
+        color: #dc3545;
+        font-weight: 500;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 8px;
+      }
+
+      .btn {
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .btn-edit {
+        background-color: #007bff;
+        color: white;
+      }
+
+      .btn-delete {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .btn-add {
+        background-color: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <dashboard-layout page-title="Doctors List">
+      <h4 slot="page-title">Doctors List</h4>
+
+      <div slot="dashboard-content" class="doctor-list">
+        <div class="table-header">
+          <h2>All Doctors</h2>
+          <button class="btn-add" onclick="window.location.href='/add-doctor'">
+            Add New Doctor
+          </button>
+        </div>
+        <table class="doctors-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Specialization</th>
+              <th>Phone</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="doctorList">
+            <!-- Doctors will be loaded here -->
+          </tbody>
+        </table>
+      </div>
+    </dashboard-layout>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          const response = await fetch("/api/doctors/all", {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          const doctors = await response.json();
+
+          const doctorList = document.getElementById("doctorList");
+          doctorList.innerHTML = doctors
+            .map(
+              (doctor) => `
+                <tr>
+                    <td>Dr. ${doctor.first_name} ${doctor.last_name}</td>
+                    <td>${doctor.specialization}</td>
+                    <td>${doctor.phone}</td>
+                    <td><span class="status-${doctor.status || 'active'}">${
+                doctor.status || "Active"
+              }</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-edit" onclick="editDoctor(${
+                              doctor.id
+                            })">Edit</button>
+                            <button class="btn btn-delete" onclick="deleteDoctor(${
+                              doctor.id
+                            })">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `
+            )
+            .join("");
+        } catch (error) {
+          console.error("Error loading doctors:", error);
+        }
+      });
+
+      // Function to handle doctor editing
+      function editDoctor(id) {
+        window.location.href = `/edit-doctor/${id}`;
+      }
+
+      // Function to handle doctor deletion
+      async function deleteDoctor(id) {
+        if (confirm("Are you sure you want to delete this doctor?")) {
+          try {
+            const response = await fetch(`/api/doctors/${id}`, {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+
+            if (response.ok) {
+              // Refresh the page to show updated list
+              window.location.reload();
+            } else {
+              alert("Failed to delete doctor");
+            }
+          } catch (error) {
+            console.error("Error deleting doctor:", error);
+            alert("Error deleting doctor");
+          }
+        }
+      }
+    </script>
+  </body>
+</html>

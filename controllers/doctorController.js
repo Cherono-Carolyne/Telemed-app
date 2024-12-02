@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const bcrypt = require("bcryptjs");
 
 const doctorController = {
   // Create: Admin adds new doctor
@@ -16,9 +17,10 @@ const doctorController = {
     try {
       // First create user account
       const hashedPassword = await bcrypt.hash(password, 10);
+      const username = email.split("@")[0];
       const [userResult] = await db.execute(
-        'INSERT INTO users (email, password_hash, role) VALUES (?, ?, "doctor")',
-        [email, hashedPassword]
+        "INSERT INTO users (email, username, role, password_hash) VALUES (?, ?, ?, ?)",
+        [email, username, "doctor", hashedPassword]
       );
 
       // Then create doctor profile
@@ -122,10 +124,13 @@ const doctorController = {
                   SELECT 
                       CONCAT(d.first_name, ' ', d.last_name) as doctor_name,
                       d.id,
+                      d.first_name,
+                      d.last_name,
                       d.specialization,
                       d.phone,
                       d.schedule
                   FROM doctors d
+                  JOIN users u ON d.user_id = u.id
                   ORDER BY d.last_name, d.first_name
               `);
 
