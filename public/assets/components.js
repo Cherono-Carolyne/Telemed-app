@@ -1,3 +1,35 @@
+// Route Guard Implementation
+class AuthGuard {
+  static checkAuth() {
+    const token = localStorage.getItem("token");
+    const publicPaths = ['/', '/about', '/contact'];
+    const authPaths = ['/login', '/register'];
+    const currentPath = window.location.pathname;
+
+    // Allow public paths without authentication
+    if (publicPaths.includes(currentPath)) {
+      return;
+    }
+
+    // Redirect to dashboard if trying to access auth pages while logged in
+    if (authPaths.includes(currentPath) && token) {
+      window.location.href = '/dashboard';
+      return;
+    }
+
+    // Redirect to login if trying to access protected routes while logged out
+    if (!authPaths.includes(currentPath) && !publicPaths.includes(currentPath) && !token) {
+      window.location.href = '/login';
+      return;
+    }
+  }
+}
+
+// Initialize auth guard
+document.addEventListener('DOMContentLoaded', () => {
+  AuthGuard.checkAuth();
+});
+
 class Navbar extends HTMLElement {
   constructor() {
     super();
@@ -5,164 +37,102 @@ class Navbar extends HTMLElement {
 
   connectedCallback() {
     this.innerHTML = `
-      <header>
-        <div class="container">
-          <nav>
-            <a href="/" class="logo">
-              <span>TeleMed</span>
-            </a>
-            <ul class="nav-links">
-              <li><a href="/" class="active">Home</a></li>
-              <li><a href="/about">About Us</a></li>
-              <li><a href="/services">Services</a></li>
-              <li><a href="/contact">Contact Us</a></li>
-              <li id="authSection">
-                ${
-                  localStorage.getItem("token")
-                    ? `<button onclick="logout()" class="logout-btn">Logout</button>
-                       <a href="/dashboard" class="dashboard-btn">Dashboard</a>`
-                    : `<a href="/login" class="login-btn">Login</a>
-                       <a href="/register" class="register-btn">Register</a>`
-                }
-              </li>
-            </ul>
-            <button class="mobile-menu-toggle">
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-          </nav>
-        </div>
-      </header>
-
-      <style>
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-          font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .container {
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 0 1rem;
-        }
-
-        nav {
-          background-color: #007bff;
-          padding: 1rem 0;
-        }
-
-        .logo {
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-          font-size: 1.5rem;
-        }
-
-        .nav-links {
-          list-style: none;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin: 0;
-          padding: 0;
-        }
-
-        .nav-links li {
-          margin: 0 15px;
-        }
-
-        .nav-links a {
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-        }
-
-        .logout-btn {
-          background-color: #dc3545;
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-
-        .logout-btn:hover {
-          background-color: #c82333;
-        }
-
-        .login-btn, .register-btn, .dashboard-btn {
-          padding: 8px 16px;
-          margin-left: 10px;
-          text-decoration: none;
-          border-radius: 4px;
-          color: white;
-        }
-
-        .login-btn {
-          background-color: #007bff;
-        }
-
-        .register-btn {
-          background-color: #28a745;
-        }
-
-        .dashboard-btn {
-          background-color: #17a2b8;
-        }
-
-        .mobile-menu-toggle {
-          display: none;
-          background: none;
-          border: none;
-          cursor: pointer;
-        }
-
-        .mobile-menu-toggle span {
-          display: block;
-          width: 25px;
-          height: 3px;
-          background-color: white;
-          margin: 5px 0;
-        }
-
-        @media (max-width: 768px) {
-          .nav-links {
-            display: none;
-            flex-direction: column;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: #007bff;
-            padding: 1rem;
-          }
-
-          .nav-links.active {
-            display: flex;
-          }
-
-          .nav-links li {
-            margin: 10px 0;
-          }
-
-          .mobile-menu-toggle {
-            display: block;
-          }
-        }
-      </style>
+    <header>
+      <div class="container">
+        <nav>
+          <a href="/" class="logo">
+            <span>TeleMed</span>
+          </a>
+          <ul class="nav-links">
+            <li><a href="/" class="active">Home</a></li>
+            <li><a href="/#about">About Us</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+          </ul>
+          <div class="header-cta">
+            <div id="authButtons">
+              ${this.getAuthButtons()}
+            </div>
+          </div>
+          <button class="mobile-menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </div>
+    </header>
     `;
 
     // Mobile menu functionality
     const mobileMenuToggle = this.querySelector(".mobile-menu-toggle");
     const navLinks = this.querySelector(".nav-links");
 
-    mobileMenuToggle.addEventListener("click", function () {
+    mobileMenuToggle.addEventListener("click", () => {
       navLinks.classList.toggle("active");
     });
+
+    // Check auth status periodically and verify token
+    this.checkAuthStatus();
+    setInterval(() => this.checkAuthStatus(), 5000);
+  }
+
+  async checkAuthStatus() {
+    const token = localStorage.getItem("token");
+    const authButtonsContainer = this.querySelector("#authButtons");
+    
+    if (token) {
+      try {
+        // Verify token validity
+        const response = await fetch("/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Invalid token');
+        }
+
+        const userData = await response.json();
+        if (authButtonsContainer) {
+          authButtonsContainer.innerHTML = this.getAuthButtons(userData);
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        if (authButtonsContainer) {
+          authButtonsContainer.innerHTML = this.getAuthButtons();
+        }
+        // Redirect to login if on a protected route
+        const currentPath = window.location.pathname;
+        if (currentPath !== '/' && currentPath !== '/#about' && currentPath !== '/contact') {
+          window.location.href = '/login';
+        }
+      }
+    } else {
+      if (authButtonsContainer) {
+        authButtonsContainer.innerHTML = this.getAuthButtons();
+      }
+    }
+  }
+
+  getAuthButtons(userData) {
+    if (userData) {
+      return `
+        <div class="auth-buttons">
+          <a href="/dashboard" class="btn btn-primary dashboard-link">Dashboard</a>
+          <button onclick="logout()" class="btn btn-danger">Logout</button>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="auth-buttons">
+          <a href="/login" class="btn btn-primary">Login</a>
+          <a href="/register" class="btn btn-outline">Register</a>
+        </div>
+      `;
+    }
   }
 }
 
@@ -208,7 +178,7 @@ class DashboardLayout extends HTMLElement {
     super();
     const template = document.createElement("template");
     template.innerHTML = `
-      <div class="dashboard-wrapper dashboard-layout">
+      <div class="dashboard-layout">
         <aside class="sidebar">
           <div class="sidebar-header">
             <h4>TeleMed</h4>
@@ -250,28 +220,13 @@ class DashboardLayout extends HTMLElement {
         </main>
       </div>
 
-      <style>
+    <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        .sidebar {
-          width: 250px;
-          color: white;
-          height: 100vh;
-          position: fixed;
-          left: 0;
-          top: 0;
-          overflow-y: auto;
-        }
-
-        .main-content {
-          flex: 1;
-          margin-left: 250px;
-          width: calc(100% - 250px);
-        }
 
         .sidebar-menu {
           list-style: none;
@@ -292,9 +247,9 @@ class DashboardLayout extends HTMLElement {
         }
 
 
-      </style>
+    </style>
 
-          <style>
+    <style>
 
       .dashboard-layout {
         display: flex;
@@ -509,41 +464,7 @@ class DashboardLayout extends HTMLElement {
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
-  connectedCallback() {
-    this.checkAuth();
-    this.setupEventListeners();
-  }
-
-  setupEventListeners() {
-    // Search functionality
-    const searchInput = this.shadowRoot.querySelector(".search-bar input");
-    const searchButton = this.shadowRoot.querySelector(".search-button");
-
-    searchButton.addEventListener("click", () => this.handleSearch(searchInput.value));
-    searchInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        this.handleSearch(searchInput.value);
-      }
-    });
-
-    // Notifications
-    const notificationsBtn = this.shadowRoot.querySelector(".notifications");
-    notificationsBtn.addEventListener("click", () => this.handleNotifications());
-  }
-
-  handleSearch(searchTerm) {
-    // Implement role-specific search
-    console.log(`Searching for: ${searchTerm}`);
-    // Add your search logic here
-  }
-
-  handleNotifications() {
-    // Implement role-specific notifications
-    console.log("Notifications clicked");
-    // Add your notifications logic here
-  }
-
-  async checkAuth() {
+  async connectedCallback() {
     const token = localStorage.getItem("token");
     if (!token) {
       window.location.href = "/login";
@@ -556,11 +477,77 @@ class DashboardLayout extends HTMLElement {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (!response.ok) {
+        throw new Error('Invalid token');
+      }
+
       const userData = await response.json();
+      
+      // Check role-based access
+      const currentPath = window.location.pathname;
+      if (!this.checkRoleAccess(currentPath, userData.role)) {
+        window.location.href = '/dashboard';
+        return;
+      }
+
       this.updateDashboard(userData);
+      this.setupEventListeners();
     } catch (error) {
-      console.error("Error loading dashboard:", error);
+      console.error("Auth error:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.href = "/login";
     }
+  }
+
+  checkRoleAccess(path, role) {
+    const roleAccess = {
+      '/admin': ['admin'],
+      '/doctor-dashboard': ['doctor'],
+      '/patient-dashboard': ['patient'],
+      '/appointments': ['doctor', 'patient', 'receptionist'],
+      '/medical-records': ['doctor', 'patient'],
+      // Add more role-specific routes as needed
+    };
+
+    // If path doesn't have specific role requirements, allow access
+    if (!roleAccess[path]) return true;
+
+    return roleAccess[path].includes(role);
+  }
+
+  setupEventListeners() {
+    // Search functionality
+    const searchInput = this.shadowRoot.querySelector(".search-bar input");
+    const searchButton = this.shadowRoot.querySelector(".search-button");
+
+    searchButton.addEventListener("click", () =>
+      this.handleSearch(searchInput.value)
+    );
+    searchInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        this.handleSearch(searchInput.value);
+      }
+    });
+
+    // Notifications
+    const notificationsBtn = this.shadowRoot.querySelector(".notifications");
+    notificationsBtn.addEventListener("click", () =>
+      this.handleNotifications()
+    );
+  }
+
+  handleSearch(searchTerm) {
+    // Implement role-specific search
+    console.log(`Searching for: ${searchTerm}`);
+    // Add your search logic here
+  }
+
+  handleNotifications() {
+    // Implement role-specific notifications
+    console.log("Notifications clicked");
+    // Add your notifications logic here
   }
 
   updateDashboard(userData) {
@@ -628,7 +615,7 @@ class DashboardLayout extends HTMLElement {
         { icon: "💰", label: "Billing", link: "/billing" },
         { icon: "💬", label: "Messages", link: "/messages" },
         { icon: "👤", label: "Profile", link: "/profile" },
-      ]
+      ],
     };
 
     return menuItems[role] || menuItems.patient; // Default to patient menu if role not found
@@ -641,10 +628,11 @@ class DashboardLayout extends HTMLElement {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      
+
       if (response.ok) {
         const notifications = await response.json();
-        const notificationBadge = this.shadowRoot.querySelector(".notifications");
+        const notificationBadge =
+          this.shadowRoot.querySelector(".notifications");
         if (notifications.length > 0) {
           notificationBadge.setAttribute("data-count", notifications.length);
           notificationBadge.style.position = "relative";

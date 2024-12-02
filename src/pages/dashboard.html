@@ -86,6 +86,12 @@
     </dashboard-layout>
 
     <script>
+      // Verify authentication
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/login';
+      }
+
       document.addEventListener("DOMContentLoaded", async function () {
         const token = localStorage.getItem("token");
         if (!token) {

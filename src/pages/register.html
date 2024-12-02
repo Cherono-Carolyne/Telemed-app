@@ -1,206 +1,318 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Form</title>
-    <link rel="stylesheet" href="assets/login.css">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration - TeleMed</title>
+    <link rel="stylesheet" href="assets/register.css" />
+    <link rel="stylesheet" href="assets/landing.css" />
     <script src="/assets/components.js"></script>
-</head>
-
-<body>
+  </head>
+  <body>
     <nav-bar></nav-bar>
-    <section>
-        <div class="login-container">
-            <h1>Patient Registration</h1>
-            <form id="registerForm">
-                <label for="first_name">First Name</label>
-                <input type="text" id="first_name" name="first_name" required>
-                <span id="error_first_name" class="error-message"></span>
-
-                <label for="last_name">Last Name</label>
-                <input type="text" id="last_name" name="last_name" required>
-                <span id="error_last_name" class="error-message"></span>
-
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-                <span id="error_email" class="error-message"></span>
-
-                <label for="phone">Phone</label>
-                <input type="tel" id="phone" name="phone" required>
-                <span id="error_phone" class="error-message"></span>
-
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-                <span id="error_password" class="error-message"></span>
-
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-                <span id="error_confirm_password" class="error-message"></span>
-
-                <label>Gender</label>
-                <div style="margin-bottom: 15px; text-align: left;">
-                    <input type="radio" id="male" name="gender" value="male" style="width: auto; margin-right: 5px;">
-                    <label for="male" style="display: inline;">Male</label>
-                    <input type="radio" id="female" name="gender" value="female" style="width: auto; margin-right: 5px; margin-left: 15px;">
-                    <label for="female" style="display: inline;">Female</label>
-                </div>
-                <span id="error_gender" class="error-message"></span>
-
-                <label for="address">Address</label>
-                <input type="text" id="address" name="address" required>
-                <span id="error_address" class="error-message"></span>
-
-                <label for="date_of_birth">Date of Birth</label>
-                <input type="date" id="date_of_birth" name="date_of_birth" required>
-                <span id="error_date_of_birth" class="error-message"></span>
-
-                <label for="user_type">Register as</label>
-                <select name="user_type" id="user_type" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
-                    <option value="patient">Patient</option>
-                    <option value="doctor">Doctor</option>
-                </select>
-            </form>
-            <button type="button" id="register">Register</button>
-            <p id="error-message" class="error-message"></p>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="breadcrumb">
+          <a href="/">Home</a>
         </div>
+        <h1>Register</h1>
+      </div>
     </section>
 
+    <!-- Registration Form Section -->
+    <section class="registration-section">
+      <div class="container">
+        <div class="registration-form-wrapper">
+          <h2>Your Information</h2>
+          <form id="registerForm" class="registration-form">
+            <div class="form-grid">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="first_name"
+                  name="first_name"
+                  placeholder="First Name*"
+                  required
+                />
+                <span id="error_first_name" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="last_name"
+                  name="last_name"
+                  placeholder="Last Name*"
+                  required
+                />
+                <span id="error_last_name" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email*"
+                  required
+                />
+                <span id="error_email" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="Phone*"
+                  required
+                />
+                <span id="error_phone" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password*"
+                  required
+                />
+                <span id="error_password" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <input
+                  type="password"
+                  id="confirm_password"
+                  name="confirm_password"
+                  placeholder="Confirm Password*"
+                  required
+                />
+                <span id="error_confirm_password" class="error-message"></span>
+              </div>
+              <div class="form-group gender-group">
+                <label>Gender:</label>
+                <div class="radio-group">
+                  <label class="radio-label">
+                    <input type="radio" id="male" name="gender" value="male" />
+                    <span>Male</span>
+                  </label>
+                  <label class="radio-label">
+                    <input
+                      type="radio"
+                      id="female"
+                      name="gender"
+                      value="female"
+                    />
+                    <span>Female</span>
+                  </label>
+                </div>
+                <span id="error_gender" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  placeholder="Address*"
+                  required
+                />
+                <span id="error_address" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <input
+                  type="date"
+                  id="date_of_birth"
+                  name="date_of_birth"
+                  placeholder="Date of Birth*"
+                  required
+                />
+                <span id="error_date_of_birth" class="error-message"></span>
+              </div>
+              <div class="form-group">
+                <select name="user_type" id="user_type" required>
+                  <option value="">Register as*</option>
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                </select>
+              </div>
+            </div>
+            <button type="button" id="register" class="btn btn-primary">
+              Register
+            </button>
+          </form>
+          <p id="error-message" class="error-message"></p>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://kit.fontawesome.com/your-kit-code.js"></script>
     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("registerForm");
+        const register = document.getElementById("register");
+        const formInputs = {
+          first_name: document.getElementById("first_name"),
+          last_name: document.getElementById("last_name"),
+          email: document.getElementById("email"),
+          phone: document.getElementById("phone"),
+          password: document.getElementById("password"),
+          confirm_password: document.getElementById("confirm_password"),
+          gender_male: document.getElementById("male"),
+          gender_female: document.getElementById("female"),
+          address: document.getElementById("address"),
+          date_of_birth: document.getElementById("date_of_birth"),
+          user_type: document.getElementById("user_type"),
+        };
+
         function validateEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
         }
 
         function validateNumber(number) {
-            const regex = /^\d+$/;
-            return regex.test(number);
+          const regex = /^\d+$/;
+          return regex.test(number);
         }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const register = document.getElementById("register");
-            const formInputs = {
-                first_name: document.querySelector('input[name="first_name"]'),
-                last_name: document.querySelector('input[name="last_name"]'),
-                email: document.querySelector('input[name="email"]'),
-                phone: document.querySelector('input[name="phone"]'),
-                password: document.querySelector('input[name="password"]'),
-                confirm_password: document.querySelector('input[name="confirm_password"]'),
-                gender_male: document.querySelector('input[id="male"]'),
-                gender_female: document.querySelector('input[id="female"]'),
-                address: document.querySelector('input[name="address"]'),
-                date_of_birth: document.querySelector('input[name="date_of_birth"]'),
-                user_type: document.querySelector('select[name="user_type"]')
-            };
-
-            // Add input event listeners for real-time validation
-            formInputs.first_name.addEventListener("input", function() {
-                if (this.value === "") {
-                    document.getElementById("error_first_name").innerText = "First name is required";
-                } else {
-                    document.getElementById("error_first_name").innerText = "";
-                }
-            });
-
-            formInputs.last_name.addEventListener("input", function() {
-                if (this.value === "") {
-                    document.getElementById("error_last_name").innerText = "Last name is required";
-                } else {
-                    document.getElementById("error_last_name").innerText = "";
-                }
-            });
-
-            formInputs.email.addEventListener("input", function() {
-                if (this.value === "") {
-                    document.getElementById("error_email").innerText = "Email is required";
-                } else if (!validateEmail(this.value)) {
-                    document.getElementById("error_email").innerText = "Email is invalid";
-                } else {
-                    document.getElementById("error_email").innerText = "";
-                }
-            });
-
-            register.addEventListener("click", async function(event) {
-                event.preventDefault();
-                let errorsCount = 0;
-
-                // Validate all fields
-                if (formInputs.first_name.value === "") {
-                    document.getElementById("error_first_name").innerText = "First name is required";
-                    errorsCount++;
-                }
-
-                if (formInputs.last_name.value === "") {
-                    document.getElementById("error_last_name").innerText = "Last name is required";
-                    errorsCount++;
-                }
-
-                if (formInputs.email.value === "") {
-                    document.getElementById("error_email").innerText = "Email is required";
-                    errorsCount++;
-                } else if (!validateEmail(formInputs.email.value)) {
-                    document.getElementById("error_email").innerText = "Email is invalid";
-                    errorsCount++;
-                }
-
-                if (formInputs.password.value === "") {
-                    document.getElementById("error_password").innerText = "Password is required";
-                    errorsCount++;
-                } else if (formInputs.password.value.length < 8) {
-                    document.getElementById("error_password").innerText = "Password should be at least 8 characters";
-                    errorsCount++;
-                }
-
-                if (formInputs.confirm_password.value === "") {
-                    document.getElementById("error_confirm_password").innerText = "Confirm password is required";
-                    errorsCount++;
-                } else if (formInputs.confirm_password.value !== formInputs.password.value) {
-                    document.getElementById("error_confirm_password").innerText = "Passwords do not match";
-                    errorsCount++;
-                }
-
-                if (!formInputs.gender_male.checked && !formInputs.gender_female.checked) {
-                    document.getElementById("error_gender").innerText = "Gender is required";
-                    errorsCount++;
-                }
-
-                if (errorsCount === 0) {
-                    try {
-                        const response = await fetch("/auth/register", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                first_name: formInputs.first_name.value,
-                                last_name: formInputs.last_name.value,
-                                email: formInputs.email.value,
-                                phone: formInputs.phone.value,
-                                password: formInputs.password.value,
-                                gender: formInputs.gender_female.checked ? "female" : "male",
-                                address: formInputs.address.value,
-                                date_of_birth: formInputs.date_of_birth.value,
-                                user_type: formInputs.user_type.value
-                            }),
-                        });
-
-                        const data = await response.json();
-
-                        if (response.ok) {
-                            alert(data.message);
-                            window.location.href = '/login';
-                        } else {
-                            document.getElementById('error-message').textContent = data.message || 'Registration failed';
-                        }
-                    } catch (error) {
-                        console.error('Registration error:', error);
-                        document.getElementById('error-message').textContent = 'An error occurred during registration';
-                    }
-                }
-            });
+        // Add input event listeners for real-time validation
+        formInputs.first_name.addEventListener("input", function () {
+          validateField(this, "first_name", "First name is required");
         });
-    </script>
-</body>
 
+        formInputs.last_name.addEventListener("input", function () {
+          validateField(this, "last_name", "Last name is required");
+        });
+
+        formInputs.email.addEventListener("input", function () {
+          if (this.value === "") {
+            showError("email", "Email is required");
+          } else if (!validateEmail(this.value)) {
+            showError("email", "Email is invalid");
+          } else {
+            clearError("email");
+          }
+        });
+
+        function validateField(input, fieldName, errorMessage) {
+          if (input.value === "") {
+            showError(fieldName, errorMessage);
+          } else {
+            clearError(fieldName);
+          }
+        }
+
+        function showError(fieldName, message) {
+          document.getElementById(`error_${fieldName}`).innerText = message;
+        }
+
+        function clearError(fieldName) {
+          document.getElementById(`error_${fieldName}`).innerText = "";
+        }
+
+        register.addEventListener("click", async function (event) {
+          event.preventDefault();
+          let errorsCount = 0;
+
+          // Validate all fields
+          validateField(
+            formInputs.first_name,
+            "first_name",
+            "First name is required"
+          );
+          validateField(
+            formInputs.last_name,
+            "last_name",
+            "Last name is required"
+          );
+
+          if (formInputs.email.value === "") {
+            showError("email", "Email is required");
+            errorsCount++;
+          } else if (!validateEmail(formInputs.email.value)) {
+            showError("email", "Email is invalid");
+            errorsCount++;
+          }
+
+          validateField(formInputs.phone, "phone", "Phone is required");
+
+          if (formInputs.password.value === "") {
+            showError("password", "Password is required");
+            errorsCount++;
+          } else if (formInputs.password.value.length < 8) {
+            showError("password", "Password should be at least 8 characters");
+            errorsCount++;
+          }
+
+          if (formInputs.confirm_password.value === "") {
+            showError("confirm_password", "Confirm password is required");
+            errorsCount++;
+          } else if (
+            formInputs.confirm_password.value !== formInputs.password.value
+          ) {
+            showError("confirm_password", "Passwords do not match");
+            errorsCount++;
+          }
+
+          if (
+            !formInputs.gender_male.checked &&
+            !formInputs.gender_female.checked
+          ) {
+            showError("gender", "Gender is required");
+            errorsCount++;
+          }
+
+          validateField(formInputs.address, "address", "Address is required");
+          validateField(
+            formInputs.date_of_birth,
+            "date_of_birth",
+            "Date of birth is required"
+          );
+
+          if (formInputs.user_type.value === "") {
+            showError("user_type", "User type is required");
+            errorsCount++;
+          }
+
+          if (errorsCount === 0) {
+            try {
+              const response = await fetch("/auth/register", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  first_name: formInputs.first_name.value,
+                  last_name: formInputs.last_name.value,
+                  email: formInputs.email.value,
+                  phone: formInputs.phone.value,
+                  password: formInputs.password.value,
+                  gender: formInputs.gender_female.checked ? "female" : "male",
+                  address: formInputs.address.value,
+                  date_of_birth: formInputs.date_of_birth.value,
+                  user_type: formInputs.user_type.value,
+                }),
+              });
+
+              const data = await response.json();
+
+              if (response.ok) {
+                alert(data.message);
+                window.location.href = "/login";
+              } else {
+                document.getElementById("error-message").textContent =
+                  data.message || "Registration failed";
+              }
+            } catch (error) {
+              console.error("Registration error:", error);
+              document.getElementById("error-message").textContent =
+                "An error occurred during registration";
+            }
+          }
+        });
+
+        // Add date validation to prevent selecting future dates
+        const dateInput = document.getElementById("date_of_birth");
+        const today = new Date().toISOString().split("T")[0];
+        dateInput.max = today;
+      });
+    </script>
+  </body>
 </html>
